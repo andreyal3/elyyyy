@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>For My Love</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffb6c1 0%, #ffe4e1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: opacity 0.8s cubic-bezier(.77,0,.18,1);
+            opacity: 1;
+        }
+        body.fade-out {
+            opacity: 0;
+        }
+        .love-container {
+            background: rgba(255,255,255,0.85);
+            border-radius: 24px;
+            box-shadow: 0 8px 40px rgba(255,105,180,0.2);
+            padding: 48px 36px 36px 36px;
+            text-align: center;
+            position: relative;
+            max-width: 400px;
+        }
+        .love-container h1 {
+            font-family: 'Segoe Script', cursive;
+            color: #e75480;
+            font-size: 2.2rem;
+            margin-bottom: 18px;
+        }
+        .love-container p {
+            color: #c2185b;
+            font-size: 1.2rem;
+            margin-bottom: 36px;
+        }
+        .love-btns {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+        .love-btn {
+            padding: 14px 38px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #ff69b4 0%, #ffb6c1 100%);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(255,105,180,0.18);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .love-btn:hover {
+            background: linear-gradient(90deg, #ff1493 0%, #ffb6c1 100%);
+            transform: scale(1.07);
+        }
+        .no-btn {
+            background: linear-gradient(90deg, #bdbdbd 0%, #f8bbd0 100%);
+            color: #c2185b;
+            position: absolute;
+        }
+        .heart {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            animation: heartbeat 1.2s infinite;
+            color: #e75480;
+            user-select: none;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: translateX(-50%) scale(1);}
+            20% { transform: translateX(-50%) scale(1.2);}
+            40% { transform: translateX(-50%) scale(0.95);}
+            60% { transform: translateX(-50%) scale(1.1);}
+            80% { transform: translateX(-50%) scale(1);}
+        }
+
+@media (max-width: 600px) {
+    .love-container {
+        max-width: 95vw;
+        padding: 28px 8vw 24px 8vw;
+    }
+    .love-container h1 {
+        font-size: 1.3rem;
+    }
+    .love-btn {
+        padding: 12px 18px;
+        font-size: 1rem;
+    }
+    .love-btns {
+        gap: 16px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="love-container">
+        <div class="heart">❤️</div>
+        <h1>Can I be your lover for the rest of your life?</h1>
+        <p>
+            You can only say yes!<br>
+            (Try clicking "No" 😉)
+        </p>
+        <div class="love-btns">
+            <button class="love-btn yes-btn">Yes</button>
+            <button class="love-btn no-btn">No</button>
+        </div>
+    </div>
+    <script>
+    // Move the "No" button away from the cursor
+    const noBtn = document.querySelector('.no-btn');
+    const container = document.querySelector('.love-container');
+    const yesBtn = document.querySelector('.yes-btn');
+
+    function moveNoBtn(e) {
+        const containerRect = container.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+        let newTop, newLeft;
+        let tries = 0;
+        do {
+            newTop = Math.random() * (containerRect.height - btnRect.height - 10);
+            newLeft = Math.random() * (containerRect.width - btnRect.width - 10);
+            tries++;
+        } while (
+            Math.abs(e.clientX - (containerRect.left + newLeft + btnRect.width/2)) < 80 &&
+            Math.abs(e.clientY - (containerRect.top + newTop + btnRect.height/2)) < 80 &&
+            tries < 10
+        );
+        noBtn.style.top = `${newTop + 180}px`;
+        noBtn.style.left = `${newLeft}px`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoBtn);
+    noBtn.addEventListener('click', moveNoBtn);
+    noBtn.addEventListener('touchstart', function(e) {
+    moveNoBtn(e);
+    // Prevent the click event from firing after touch
+    e.preventDefault();
+}, {passive: false});
+    // Reset "No" button position on resize
+    window.addEventListener('resize', () => {
+        noBtn.style.top = '';
+        noBtn.style.left = '';
+    });
+
+    // When "Yes" is clicked, fade out then redirect
+    yesBtn.addEventListener('click', () => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+            window.location.href = "video.html";
+        }, 800); // Match the CSS transition duration
+    });
+    </script>
+</body>
+</html>

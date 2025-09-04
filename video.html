@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Special Video</title>
+    <style>
+        body {
+            background: #181818;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .video-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video {
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 18px;
+            box-shadow: 0 4px 32px rgba(255,105,180,0.25);
+            z-index: 1;
+        }
+        .hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2.2rem;
+            color: #ff69b4;
+            opacity: 0.85;
+            animation: floatUp 2.5s linear forwards;
+            user-select: none;
+            filter: drop-shadow(0 2px 8px #ffb6c1);
+        }
+        .heart.left {
+            left: -40px;
+        }
+        .heart.right {
+            right: -40px;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 0.85;
+                transform: translateY(0) scale(1) rotate(-10deg);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(-60px) scale(1.2) rotate(10deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0.9) rotate(-10deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+    .video-wrapper {
+        width: 100vw;
+        height: 100vh;
+    }
+    video {
+        max-width: 98vw;
+        max-height: 50vh;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="video-wrapper">
+        <video id="loveVideo" controls autoplay>
+            <source src="video/best.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hearts"></div>
+    </div>
+    <script>
+    const video = document.getElementById('loveVideo');
+    const heartsContainer = document.querySelector('.hearts');
+    let heartInterval = null;
+
+    function spawnHeart(side) {
+        const heart = document.createElement('div');
+        heart.className = `heart ${side}`;
+        heart.textContent = '❤️';
+        // Randomize vertical start position a bit
+        heart.style.top = `${30 + Math.random() * 60}%`;
+        // Randomize size
+        heart.style.fontSize = `${1.8 + Math.random() * 1.2}rem`;
+        heartsContainer.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 2500);
+    }
+
+    function startHearts() {
+        if (heartInterval) return;
+        heartInterval = setInterval(() => {
+            spawnHeart('left');
+            setTimeout(() => spawnHeart('right'), 500);
+        }, 900);
+    }
+
+    function stopHearts() {
+        clearInterval(heartInterval);
+        heartInterval = null;
+    }
+
+    video.addEventListener('play', startHearts);
+    video.addEventListener('pause', stopHearts);
+    video.addEventListener('ended', stopHearts);
+
+    // Start hearts if autoplay
+    if (!video.paused) startHearts();
+    </script>
+</body>
+</html>
